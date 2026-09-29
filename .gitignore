@@ -1,0 +1,14 @@
+.DS_Store
+.vscode/
+
+build/
+cmake-build-*/
+
+*.o
+*.so
+*.a
+
+__pycache__/
+*.pyc
+
+*.log
