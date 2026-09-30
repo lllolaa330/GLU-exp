@@ -30,9 +30,10 @@ __global__ void RL(
         const int levelHead,
         const int inLevPos)
 {
+    const int wave_width = waveSize; 
     const int tid = threadIdx.x;
     const int bid = blockIdx.x;
-    const int wid = threadIdx.x / 32;
+    const int wid = threadIdx.x / wave_width;
 
     const unsigned currentCol = level_idx_dev[levelHead+inLevPos+bid];
     const unsigned currentLColSize = sym_c_ptr_dev[currentCol + 1] - l_col_ptr_dev[currentCol] - 1;
@@ -60,7 +61,7 @@ __global__ void RL(
     const unsigned subColPos = csr_diag_ptr_dev[currentCol] + wid + 1;
     const unsigned subMatSize = csr_r_ptr_dev[currentCol + 1] - csr_diag_ptr_dev[currentCol] - 1;
     unsigned subCol;
-    const int tidInWarp = threadIdx.x % 32;
+    const int tidInWarp = threadIdx.x % wave_width;
     unsigned subColElem = 0;
 
     int woffset = 0;
@@ -91,10 +92,10 @@ __global__ void RL(
                         atomicAdd(&val_dev[subColElem], -tmpMem[ridx+n*bid]*s[wid]);
                     }
                 }
-                offset += 32;
+                offset += wave_width;
             }
         }
-        woffset += blockDim.x/32;
+        woffset += blockDim.x/wave_width;
     }
 
     __syncthreads();
@@ -126,9 +127,10 @@ __global__ void RL_perturb(
         const int inLevPos,
         const REAL pert)
 {
+    const int wave_width = waveSize;
     const int tid = threadIdx.x;
     const int bid = blockIdx.x;
-    const int wid = threadIdx.x / 32;
+    const int wid = threadIdx.x / wave_width;
 
     const unsigned currentCol = level_idx_dev[levelHead+inLevPos+bid];
     const unsigned currentLColSize = sym_c_ptr_dev[currentCol + 1] - l_col_ptr_dev[currentCol] - 1;
@@ -159,7 +161,7 @@ __global__ void RL_perturb(
     const unsigned subColPos = csr_diag_ptr_dev[currentCol] + wid + 1;
     const unsigned subMatSize = csr_r_ptr_dev[currentCol + 1] - csr_diag_ptr_dev[currentCol] - 1;
     unsigned subCol;
-    const int tidInWarp = threadIdx.x % 32;
+    const int tidInWarp = threadIdx.x % wave_width;
     unsigned subColElem = 0;
 
     int woffset = 0;
@@ -190,10 +192,10 @@ __global__ void RL_perturb(
                         atomicAdd(&val_dev[subColElem], -tmpMem[ridx+n*bid]*s[wid]);
                     }
                 }
-                offset += 32;
+                offset += wave_width;
             }
         }
-        woffset += blockDim.x/32;
+        woffset += blockDim.x/wave_width;
     }
 
     __syncthreads();
@@ -392,6 +394,8 @@ void LUonDevice(Symbolic_Matrix &A_sym, ostream &out, ostream &err, bool PERTURB
         return;
     const auto after_device_select = WallClock::now();
     out << "Device " << dev << ": " << deviceProp.name << " has been selected." << endl;
+    out << "Device waveSize: " << deviceProp.waveSize << endl;
+    out << "Device maxThreadsPerBlock: " << deviceProp.maxThreadsPerBlock << endl;
 
     cudaEvent_t start = nullptr, stop = nullptr;
     unsigned *sym_c_ptr_dev = nullptr, *sym_r_idx_dev = nullptr, *l_col_ptr_dev = nullptr;
@@ -526,9 +530,10 @@ void LUonDevice(Symbolic_Matrix &A_sym, ostream &out, ostream &err, bool PERTURB
         out << "1-Norm of A matrix is " << norm_A << ", Perturbation value is " << pert << endl;
     }
 
-    auto launch_batched_level = [&](unsigned level_head, int level_size, unsigned warps_per_block) {
-        dim3 dimBlock(warps_per_block * 32, 1);
-        size_t mem_size = warps_per_block * sizeof(REAL);
+    auto launch_batched_level = [&](unsigned level_head, int level_size, unsigned threads_per_block) {
+        dim3 dimBlock(threads_per_block, 1);
+        const unsigned waves_per_block = threads_per_block / deviceProp.waveSize;
+        size_t mem_size = waves_per_block * sizeof(REAL);
 
         int remaining = level_size;
         unsigned chunk_idx = 0;
@@ -577,13 +582,13 @@ void LUonDevice(Symbolic_Matrix &A_sym, ostream &out, ostream &err, bool PERTURB
             continue;
 
         if (lev_size > 896) {
-            launch_batched_level(A_sym.level_ptr[i], lev_size, 2);
+            launch_batched_level(A_sym.level_ptr[i], lev_size, 64);
         }
         else if (lev_size > 448) {
-            launch_batched_level(A_sym.level_ptr[i], lev_size, 4);
+            launch_batched_level(A_sym.level_ptr[i], lev_size, 128);
         }
         else if (lev_size > Nstreams) {
-            launch_batched_level(A_sym.level_ptr[i], lev_size, 32);
+            launch_batched_level(A_sym.level_ptr[i], lev_size, 1024);
         }
         else {
             // Small levels are mapped to one stream per column to reduce launch overhead.
