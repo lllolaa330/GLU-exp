@@ -1,0 +1,200 @@
+which: no nvcc in (/opt/hpcc/bin:/opt/hpcc/htgpu_llvm/bin:/opt/hpcc/tools/cu-bridge/tools:/opt/hpcc/ompi/bin:/opt/hpcc/ucx/bin:/opt/htdriver/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin)
+make hpcc verion:0220 ...
+g++ -O3 -Wall -std=c++11 -Ipreprocess -I../include -Inicslu/include -DGLU_DEBUG=0 -c Timer.cpp -o Timer.o
+nvcc -O3 -lineinfo -std=c++11 -Xcompiler -Ipreprocess -I../include -Inicslu/include -c numeric.cu -o numeric.o
+g++ -O3 -Wall -std=c++11 -Ipreprocess -I../include -Inicslu/include -DGLU_DEBUG=0 -c symbolic.cc -o symbolic.o
+g++ -O3 -Wall -std=c++11 -Ipreprocess -I../include -Inicslu/include -DGLU_DEBUG=0 -c lu_cmd.cpp -o lu_cmd.o
+make -C preprocess/
+make[1]: Entering directory '/workspace/jjy-exp/GLU-exp/src/preprocess'
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  -I../nicslu/include -I../nicslu/util preprocess.c -o preprocess.o
+make[1]: Leaving directory '/workspace/jjy-exp/GLU-exp/src/preprocess'
+make -C nicslu/
+make[1]: Entering directory '/workspace/jjy-exp/GLU-exp/src/nicslu'
+(cd lib; make)
+make[2]: Entering directory '/workspace/jjy-exp/GLU-exp/src/nicslu/lib'
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_aegraph.c -o nicslu_aegraph.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_amd.c -o nicslu_amd.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_analyze.c -o nicslu_analyze.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_check.c -o nicslu_check.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_cond.c -o nicslu_cond.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_destroy.c -o nicslu_destroy.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_dumpa.c -o nicslu_dumpa.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_dumplu.c -o nicslu_dumplu.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_etree.c -o nicslu_etree.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_flops.c -o nicslu_flops.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_global.c -o nicslu_global.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_initialize.c -o nicslu_initialize.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_internal.c -o nicslu_internal.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_kernel.c -o nicslu_kernel.o
+../source/nicslu_kernel.c: In function '_I_NicsLU_Symbolic':
+../source/nicslu_kernel.c:29:17: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   if (flag[col] != k)/*not visited*/
+                 ^~
+../source/nicslu_kernel.c:41:18: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+      if (flag[j] != k)
+                  ^~
+../source/nicslu_kernel.c:44:50: warning: signed and unsigned type in conditional expression [-Wsign-compare]
+       appos[head] = ((pend[jnew]<0) ? ulen[jnew] : pend[jnew]);
+                                                  ^
+../source/nicslu_kernel.c:51:22: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+       if (flag[ucol] != k)
+                      ^~
+../source/nicslu_kernel.c: In function '_I_NicsLU_Pivot':
+../source/nicslu_kernel.c:120:9: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   if (i == diagcol)
+         ^~
+../source/nicslu_kernel.c:144:15: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  if (last_col == diagcol)
+               ^~
+../source/nicslu_kernel.c: In function '_I_NicsLU_Prune':
+../source/nicslu_kernel.c:219:17: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+     if (uip[p2] == pivcol)
+                 ^~
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_kernel_fact.c -o nicslu_kernel_fact.o
+../source/nicslu_kernel_fact.c: In function 'NicsLU_Factorize':
+../source/nicslu_kernel_fact.c:279:14: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   if (pivcol != diagcol)/*diagcol = p[i]*/
+              ^~
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_kernel_fact_parallel.c -o nicslu_kernel_fact_parallel.o
+../source/nicslu_kernel_fact_parallel.c: In function '_I_NicsLU_Factorize_Cluster':
+../source/nicslu_kernel_fact_parallel.c:223:14: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   if (pivcol != diagcol)/*diagcol = p[i]*/
+              ^~
+../source/nicslu_kernel_fact_parallel.c: In function '_I_NicsLU_Factorize_Pipeline':
+../source/nicslu_kernel_fact_parallel.c:485:25: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+          if (updated[j] != i)
+                         ^~
+../source/nicslu_kernel_fact_parallel.c:571:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    if (updated[j] == i) continue;
+                   ^~
+../source/nicslu_kernel_fact_parallel.c:661:14: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   if (pivcol != diagcol)/*diagcol = p[i]*/
+              ^~
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_kernel_parallel.c -o nicslu_kernel_parallel.o
+../source/nicslu_kernel_parallel.c: In function '_I_NicsLU_Symbolic_Cluster':
+../source/nicslu_kernel_parallel.c:29:17: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   if (flag[col] != k)/*not visited*/
+                 ^~
+../source/nicslu_kernel_parallel.c:41:18: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+      if (flag[j] != k)
+                  ^~
+../source/nicslu_kernel_parallel.c:44:50: warning: signed and unsigned type in conditional expression [-Wsign-compare]
+       appos[head] = ((pend[jnew]<0) ? ulen[jnew] : pend[jnew]);
+                                                  ^
+../source/nicslu_kernel_parallel.c:51:22: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+       if (flag[ucol] != k)
+                      ^~
+../source/nicslu_kernel_parallel.c: In function '_I_NicsLU_Symbolic_Pipeline':
+../source/nicslu_kernel_parallel.c:104:17: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   if (flag[col] != k)/*not visited*/
+                 ^~
+../source/nicslu_kernel_parallel.c:116:18: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+      if (flag[j] != k)
+                  ^~
+../source/nicslu_kernel_parallel.c:143:22: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+       if (flag[ucol] != k)
+                      ^~
+../source/nicslu_kernel_parallel.c: In function '_I_NicsLU_Pivot_Parallel':
+../source/nicslu_kernel_parallel.c:210:9: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   if (i == diagcol)
+         ^~
+../source/nicslu_kernel_parallel.c:234:15: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  if (last_col == diagcol)
+               ^~
+../source/nicslu_kernel_parallel.c: In function '_I_NicsLU_Prune_Parallel':
+../source/nicslu_kernel_parallel.c:308:17: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+     if (uip[p2] == pivcol)
+                 ^~
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_matrix.c -o nicslu_matrix.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_memuse.c -o nicslu_memuse.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_mergedup.c -o nicslu_mergedup.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_mc64.c -o nicslu_mc64.o
+../source/nicslu_mc64.c: In function '_I_NicsLU_MC64ad':
+../source/nicslu_mc64.c:13:41: warning: unused parameter 'liw' [-Wunused-parameter]
+  int__t *match, int__t *match2, uint__t liw, int__t *iw, uint__t ldw, real__t *dw)
+                                         ^~~
+../source/nicslu_mc64.c:13:66: warning: unused parameter 'ldw' [-Wunused-parameter]
+  int__t *match, int__t *match2, uint__t liw, int__t *iw, uint__t ldw, real__t *dw)
+                                                                  ^~~
+../source/nicslu_mc64.c: In function '_I_NicsLU_MC64wd':
+../source/nicslu_mc64.c:362:44: warning: unused parameter 'nnz' [-Wunused-parameter]
+ int__t _I_NicsLU_MC64wd(uint__t n, uint__t nnz, uint__t *ai, uint__t *ap, real__t *ax, int__t *iperm, int__t *jperm, \
+                                            ^~~
+../source/nicslu_mc64.c:746:8: warning: 'jsp' may be used uninitialized in this function [-Wmaybe-uninitialized]
+   jperm[jsp] = isp;
+        ^
+../source/nicslu_mc64.c:744:11: warning: 'isp' may be used uninitialized in this function [-Wmaybe-uninitialized]
+   col = ai[isp];
+           ^
+../source/nicslu_mc64.c:372:14: warning: 'k0' may be used uninitialized in this function [-Wmaybe-uninitialized]
+  uint__t i0, k0;
+              ^~
+../source/nicslu_mc64.c:468:32: warning: 'i0' may be used uninitialized in this function [-Wmaybe-uninitialized]
+    if (iperm[col] >= 0 || iperm[i0] < 0)
+                                ^
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_mc64scale.c -o nicslu_mc64scale.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_refact.c -o nicslu_refact.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_refact_parallel.c -o nicslu_refact_parallel.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_refine.c -o nicslu_refine.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_residual.c -o nicslu_residual.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_scale.c -o nicslu_scale.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_scheduler.c -o nicslu_scheduler.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_solve.c -o nicslu_solve.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_sort.c -o nicslu_sort.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_static_symbolic.c -o nicslu_static_symbolic.o
+../source/nicslu_static_symbolic.c: In function '_I_NicsLU_StaticSymbolicFactorize':
+../source/nicslu_static_symbolic.c:121:18: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    if (flag[col] != i)
+                  ^~
+../source/nicslu_static_symbolic.c:132:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+       if (flag[p] != i)
+                   ^~
+../source/nicslu_static_symbolic.c:135:45: warning: signed and unsigned type in conditional expression [-Wsign-compare]
+        appos[head] = ((pend[p]<0) ? ulen[p] : pend[p]);
+                                             ^
+../source/nicslu_static_symbolic.c:143:23: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+        if (flag[ucol] != i)
+                       ^~
+../source/nicslu_static_symbolic.c:329:8: warning: 'minid' may be used uninitialized in this function [-Wmaybe-uninitialized]
+    thfi[minid] = ed;
+        ^
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_thread.c -o nicslu_thread.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_thread_proc.c -o nicslu_thread_proc.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_throughput.c -o nicslu_throughput.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/nicslu_transpose.c -o nicslu_transpose.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/system.c -o system.o
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/thread.c -o thread.o
+../source/thread.c: In function '_InitBarrier':
+../source/thread.c:516:2: warning: implicit declaration of function 'memset' [-Wimplicit-function-declaration]
+  memset(barr->reach, 0, sizeof(int)*(threads+threads));
+  ^~~~~~
+../source/thread.c:516:2: warning: incompatible implicit declaration of built-in function 'memset'
+../source/thread.c:516:2: note: include '<string.h>' or provide a declaration of 'memset'
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  ../source/timer_c.c -o timer_c.o
+ar -r nicslu.a nicslu_aegraph.o nicslu_amd.o nicslu_analyze.o nicslu_check.o nicslu_cond.o nicslu_destroy.o nicslu_dumpa.o nicslu_dumplu.o nicslu_etree.o nicslu_flops.o nicslu_global.o nicslu_initialize.o nicslu_internal.o nicslu_kernel.o nicslu_kernel_fact.o nicslu_kernel_fact_parallel.o nicslu_kernel_parallel.o nicslu_matrix.o nicslu_memuse.o nicslu_mergedup.o nicslu_mc64.o nicslu_mc64scale.o nicslu_refact.o nicslu_refact_parallel.o nicslu_refine.o nicslu_residual.o nicslu_scale.o nicslu_scheduler.o nicslu_solve.o nicslu_sort.o nicslu_static_symbolic.o nicslu_thread.o nicslu_thread_proc.o nicslu_throughput.o nicslu_transpose.o system.o thread.o timer_c.o
+ranlib nicslu.a
+make[2]: Leaving directory '/workspace/jjy-exp/GLU-exp/src/nicslu/lib'
+(cd util; make)
+make[2]: Entering directory '/workspace/jjy-exp/GLU-exp/src/nicslu/util'
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  -I ../include nicslu_readfile.c -o nicslu_readfile.o
+nicslu_readfile.c:52:12: warning: 'ReadHeader2' defined but not used [-Wunused-function]
+ static int ReadHeader2(FILE *f, uint__t *m, uint__t *n, uint__t *nnz)
+            ^~~~~~~~~~~
+ar -r nicslu_util.a nicslu_readfile.o
+ranlib nicslu_util.a
+make[2]: Leaving directory '/workspace/jjy-exp/GLU-exp/src/nicslu/util'
+(cd demo; make)
+make[2]: Entering directory '/workspace/jjy-exp/GLU-exp/src/nicslu/demo'
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  -o demos.o -I ../include/ -I ../util/ demos.c
+gcc  -o demos demos.o -L. ../lib/nicslu.a ../util/nicslu_util.a -lrt -lpthread -lm
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  -o demop.o -I ../include/ -I ../util/ demop.c
+gcc  -o demop demop.o -L. ../lib/nicslu.a ../util/nicslu_util.a -lrt -lpthread -lm
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  -o test.o -I ../include/ -I ../util/ test.c
+gcc  -o test test.o -L. ../lib/nicslu.a ../util/nicslu_util.a -lrt -lpthread -lm
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  -o demos_time.o -I ../include/ -I ../util/ demos_time.c
+gcc  -o demos_time demos_time.o -L. ../lib/nicslu.a ../util/nicslu_util.a -lrt -lpthread -lm
+gcc -c -g -O2 -Wall -Wextra  -DNO_ATOMIC  -o demop_time.o -I ../include/ -I ../util/ demop_time.c
+gcc  -o demop_time demop_time.o -L. ../lib/nicslu.a ../util/nicslu_util.a -lrt -lpthread -lm
+make[2]: Leaving directory '/workspace/jjy-exp/GLU-exp/src/nicslu/demo'
+make[1]: Leaving directory '/workspace/jjy-exp/GLU-exp/src/nicslu'
+nvcc Timer.o numeric.o symbolic.o lu_cmd.o preprocess/preprocess.o nicslu/lib/nicslu.a nicslu/util/nicslu_util.a -o lu_cmd

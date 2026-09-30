@@ -1,0 +1,4 @@
+which: no nvcc in (/opt/hpcc/bin:/opt/hpcc/htgpu_llvm/bin:/opt/hpcc/tools/cu-bridge/tools:/opt/hpcc/ompi/bin:/opt/hpcc/ucx/bin:/opt/htdriver/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin)
+make hpcc verion:0220 ...
+g++ -O3 -Wall -std=c++11 -Ipreprocess -I../include -Inicslu/include -DGLU_DEBUG=0 -c lu_cmd.cpp -o lu_cmd.o
+nvcc Timer.o numeric.o symbolic.o lu_cmd.o preprocess/preprocess.o nicslu/lib/nicslu.a nicslu/util/nicslu_util.a -o lu_cmd

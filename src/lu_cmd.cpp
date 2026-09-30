@@ -10,6 +10,7 @@
 #include "Timer.h"
 #include "preprocess.h"
 #include "nicslu.h"
+#include <chrono>
 
 using namespace std;
 
@@ -65,6 +66,7 @@ int main(int argc, char** argv)
         return -1;
     }
 
+    const auto total_start = std::chrono::steady_clock::now();
     nicslu = static_cast<SNicsLU *>(malloc(sizeof(SNicsLU)));
     if (nicslu == nullptr) {
         cerr << "Failed to allocate NicsLU context." << endl;
@@ -123,9 +125,15 @@ int main(int argc, char** argv)
     // Solve Ax=b with the computed factors and NICSLU permutations/scales.
     vector<REAL> b(n, 1.);
     vector<REAL> x = A_sym.solve_CSR(nicslu, b);
+    
+    const auto total_stop = std::chrono::steady_clock::now();
+    const double total_ms = 
+         std::chrono::duration<double, std::milli>(total_stop - total_start).count();
+    cout << "Total solve wall time: " << total_ms << " ms" << endl;
+         
     {
         ofstream x_f("x.dat");
-        x_f << std::fixed << std::setprecision(10);
+        x_f << std::scientific << std::setprecision(17); // fixed改为scientific 10改为17 (只改变了保留解的方式)
         for (REAL xx: x)
             x_f << xx << '\n';
     }

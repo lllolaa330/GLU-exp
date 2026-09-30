@@ -1,0 +1,43 @@
+make: Entering directory '/workspace/jjy-exp/KLU_standalone'
+mkdir -p build
+cc -O2 -fPIC -w -Iinclude -c src/SuiteSparse_config.c -o build/SuiteSparse_config.o
+cc -O2 -fPIC -w -Iinclude -c src/amd_1.c -o build/amd_1.o
+cc -O2 -fPIC -w -Iinclude -c src/amd_2.c -o build/amd_2.o
+cc -O2 -fPIC -w -Iinclude -c src/amd_aat.c -o build/amd_aat.o
+cc -O2 -fPIC -w -Iinclude -c src/amd_control.c -o build/amd_control.o
+cc -O2 -fPIC -w -Iinclude -c src/amd_defaults.c -o build/amd_defaults.o
+cc -O2 -fPIC -w -Iinclude -c src/amd_dump.c -o build/amd_dump.o
+cc -O2 -fPIC -w -Iinclude -c src/amd_info.c -o build/amd_info.o
+cc -O2 -fPIC -w -Iinclude -c src/amd_order.c -o build/amd_order.o
+cc -O2 -fPIC -w -Iinclude -c src/amd_post_tree.c -o build/amd_post_tree.o
+cc -O2 -fPIC -w -Iinclude -c src/amd_postorder.c -o build/amd_postorder.o
+cc -O2 -fPIC -w -Iinclude -c src/amd_preprocess.c -o build/amd_preprocess.o
+cc -O2 -fPIC -w -Iinclude -c src/amd_valid.c -o build/amd_valid.o
+cc -O2 -fPIC -w -Iinclude -c src/amd_version.c -o build/amd_version.o
+cc -O2 -fPIC -w -Iinclude -c src/btf_maxtrans.c -o build/btf_maxtrans.o
+cc -O2 -fPIC -w -Iinclude -c src/btf_order.c -o build/btf_order.o
+cc -O2 -fPIC -w -Iinclude -c src/btf_strongcomp.c -o build/btf_strongcomp.o
+cc -O2 -fPIC -w -Iinclude -c src/btf_version.c -o build/btf_version.o
+cc -O2 -fPIC -w -Iinclude -c src/colamd.c -o build/colamd.o
+cc -O2 -fPIC -w -Iinclude -c src/colamd_version.c -o build/colamd_version.o
+cc -O2 -fPIC -w -Iinclude -c src/klu.c -o build/klu.o
+cc -O2 -fPIC -w -Iinclude -c src/klu_analyze.c -o build/klu_analyze.o
+cc -O2 -fPIC -w -Iinclude -c src/klu_analyze_given.c -o build/klu_analyze_given.o
+cc -O2 -fPIC -w -Iinclude -c src/klu_defaults.c -o build/klu_defaults.o
+cc -O2 -fPIC -w -Iinclude -c src/klu_diagnostics.c -o build/klu_diagnostics.o
+cc -O2 -fPIC -w -Iinclude -c src/klu_dump.c -o build/klu_dump.o
+cc -O2 -fPIC -w -Iinclude -c src/klu_extract.c -o build/klu_extract.o
+cc -O2 -fPIC -w -Iinclude -c src/klu_factor.c -o build/klu_factor.o
+cc -O2 -fPIC -w -Iinclude -c src/klu_free_numeric.c -o build/klu_free_numeric.o
+cc -O2 -fPIC -w -Iinclude -c src/klu_free_symbolic.c -o build/klu_free_symbolic.o
+cc -O2 -fPIC -w -Iinclude -c src/klu_kernel.c -o build/klu_kernel.o
+cc -O2 -fPIC -w -Iinclude -c src/klu_memory.c -o build/klu_memory.o
+cc -O2 -fPIC -w -Iinclude -c src/klu_refactor.c -o build/klu_refactor.o
+cc -O2 -fPIC -w -Iinclude -c src/klu_scale.c -o build/klu_scale.o
+cc -O2 -fPIC -w -Iinclude -c src/klu_solve.c -o build/klu_solve.o
+cc -O2 -fPIC -w -Iinclude -c src/klu_sort.c -o build/klu_sort.o
+cc -O2 -fPIC -w -Iinclude -c src/klu_tsolve.c -o build/klu_tsolve.o
+cc -O2 -fPIC -w -Iinclude -c src/klu_version.c -o build/klu_version.o
+ar rcs libklu.a build/SuiteSparse_config.o build/amd_1.o build/amd_2.o build/amd_aat.o build/amd_control.o build/amd_defaults.o build/amd_dump.o build/amd_info.o build/amd_order.o build/amd_post_tree.o build/amd_postorder.o build/amd_preprocess.o build/amd_valid.o build/amd_version.o build/btf_maxtrans.o build/btf_order.o build/btf_strongcomp.o build/btf_version.o build/colamd.o build/colamd_version.o build/klu.o build/klu_analyze.o build/klu_analyze_given.o build/klu_defaults.o build/klu_diagnostics.o build/klu_dump.o build/klu_extract.o build/klu_factor.o build/klu_free_numeric.o build/klu_free_symbolic.o build/klu_kernel.o build/klu_memory.o build/klu_refactor.o build/klu_scale.o build/klu_solve.o build/klu_sort.o build/klu_tsolve.o build/klu_version.o
+cc -O2 -fPIC -w -Iinclude examples/klu_demo.c libklu.a -lm -o klu_demo
+make: Leaving directory '/workspace/jjy-exp/KLU_standalone'

@@ -1,0 +1,36 @@
+{
+  "source_run": "add32-repeat-3rE4Wh",
+  "matrix": "add32_csr.mtx",
+  "n": 4960,
+  "warmup_rounds": [
+    0
+  ],
+  "measured_rounds": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "process_model": "fresh process each run; KLU then GLU; same b=ones",
+  "klu_median_ms": 10.498933,
+  "glu_median_ms": 76.133,
+  "speedup_ratio_of_medians": 0.13790252584293275,
+  "glu_slowdown": 7.25149879516328,
+  "klu_range_ms": [
+    10.4468,
+    14.442169
+  ],
+  "glu_range_ms": [
+    73.0047,
+    77.3245
+  ],
+  "max_relative_l2_error": 2.7024217325801865e-15,
+  "gpu_util": null,
+  "achieved_occupancy": null,
+  "bandwidth_util": null,
+  "peak_device_memory": null,
+  "pure_lu_kernel_time_ms": null,
+  "triangular_solve_ms": null,
+  "gflops": null
+}

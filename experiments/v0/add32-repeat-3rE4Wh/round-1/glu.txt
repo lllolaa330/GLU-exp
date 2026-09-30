@@ -1,0 +1,17 @@
+Reading matrix...
+Preprocessing matrix...
+Preprocessing time: 1.520367 ms
+Matrix Row: 4960
+Original nonzero: 23884
+Symbolic nonzero: 23942
+Symbolic time: 0.369 ms
+CSR time: 0.396 ms
+PredictLU time: 0.088 ms
+Number of levels: 54
+Leveling time: 0.031 ms
+Device 0: Mars 01 has been selected.
+Total GPU time: 17.823 ms
+Total solve wall time: 73.92 ms
+Ax-b (1-norm): 6.31084e-12
+Ax-b (2-norm): 1.82449e-13
+Ax-b (infinite-norm): 2.95319e-14

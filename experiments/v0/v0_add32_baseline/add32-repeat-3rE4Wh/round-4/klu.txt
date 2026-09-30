@@ -1,0 +1,2 @@
+n=4960 nnz=23884 ||Ax-b||2=1.247955e-13 ||b||2=7.042727e+01 status=0
+Total solve wall time: 10.458201 ms
