@@ -1,0 +1,41 @@
+{
+  "formal_rounds": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "median_ms_except_error": {
+    "device_prepare": 47.175406,
+    "device_body_mixed": 18.712827,
+    "device_release": 0.918744,
+    "device_inner_total": 66.901933,
+    "device_count_entry": 47.149214,
+    "device_properties": 0.006251,
+    "device_select": 0.00455,
+    "device_prepare_other": 0.014751,
+    "device_events_alloc": 1.120028,
+    "device_h2d_structure": 0.14586,
+    "device_h2d_values": 0.029232,
+    "device_workspace": 2.088226,
+    "device_host_numeric_prepare": 0.00015,
+    "device_levels_wall": 14.732579,
+    "device_factors_d2h": 0.554879,
+    "device_finalize": 0.049373,
+    "input_preprocess_mixed": 9.005129,
+    "symbolic": 0.739111,
+    "csr_structure": 0.783615,
+    "values_prepare": 0.177722,
+    "leveling": 0.063334,
+    "device_pipeline": 66.967688,
+    "rhs_solve": 0.074095,
+    "glu_total": 77.757242,
+    "klu_total": 10.509014,
+    "relative_l2_error": 2.6761730287532082e-15,
+    "body_sum_difference_ms": 0.0
+  },
+  "cold_speedup_ratio_of_medians": 0.13515157855007254,
+  "median_per_run_loop_body_fraction": 0.7872984130083605,
+  "max_body_sum_difference_ms": 0.0
+}

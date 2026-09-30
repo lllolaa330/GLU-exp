@@ -3,9 +3,18 @@
 #include <iostream>
 #include "symbolic.h"
 #include <cmath>
+#include <chrono>
+#include <iomanip>
 
 using namespace std;
+using WallClock = std::chrono::steady_clock;
 
+static double device_elapsed_ms(
+    WallClock::time_point start,
+    WallClock::time_point stop)
+{
+    return std::chrono::duration<double, std::milli>(stop - start).count();
+}
 
 __global__ void RL(
         const unsigned* __restrict__ sym_c_ptr_dev,
@@ -346,6 +355,8 @@ __global__ void RL_onecol_cleartmpMem(
 
 void LUonDevice(Symbolic_Matrix &A_sym, ostream &out, ostream &err, bool PERTURB)
 {
+    const auto device_start = WallClock::now();
+
     if (A_sym.n == 0 || A_sym.nnz == 0) {
         err << "Matrix is empty; skipping GPU factorization." << endl;
         return;
@@ -366,6 +377,7 @@ void LUonDevice(Symbolic_Matrix &A_sym, ostream &out, ostream &err, bool PERTURB
     int deviceCount = 0;
     if (!cudaCheck(cudaGetDeviceCount(&deviceCount), "cudaGetDeviceCount"))
         return;
+    const auto after_device_count = WallClock::now();
     if (deviceCount <= 0) {
         err << "No CUDA-capable GPU detected." << endl;
         return;
@@ -375,8 +387,10 @@ void LUonDevice(Symbolic_Matrix &A_sym, ostream &out, ostream &err, bool PERTURB
     cudaDeviceProp deviceProp;
     if (!cudaCheck(cudaGetDeviceProperties(&deviceProp, dev), "cudaGetDeviceProperties"))
         return;
+    const auto after_device_properties = WallClock::now();
     if (!cudaCheck(cudaSetDevice(dev), "cudaSetDevice"))
         return;
+    const auto after_device_select = WallClock::now();
     out << "Device " << dev << ": " << deviceProp.name << " has been selected." << endl;
 
     cudaEvent_t start = nullptr, stop = nullptr;
@@ -428,6 +442,8 @@ void LUonDevice(Symbolic_Matrix &A_sym, ostream &out, ostream &err, bool PERTURB
         } \
     } while (0)
 
+    const auto after_device_prepare = WallClock::now();
+
     CUDA_RETURN_ON_ERR(cudaEventCreate(&start), "cudaEventCreate(start)");
     CUDA_RETURN_ON_ERR(cudaEventCreate(&stop), "cudaEventCreate(stop)");
     CUDA_RETURN_ON_ERR(cudaEventRecord(start, 0), "cudaEventRecord(start)");
@@ -440,12 +456,15 @@ void LUonDevice(Symbolic_Matrix &A_sym, ostream &out, ostream &err, bool PERTURB
     CUDA_RETURN_ON_ERR(cudaMalloc((void**)&csr_c_idx_dev, nnz * sizeof(unsigned)), "cudaMalloc(csr_c_idx_dev)");
     CUDA_RETURN_ON_ERR(cudaMalloc((void**)&csr_diag_ptr_dev, n * sizeof(unsigned)), "cudaMalloc(csr_diag_ptr_dev)");
     CUDA_RETURN_ON_ERR(cudaMalloc((void**)&level_idx_dev, n * sizeof(int)), "cudaMalloc(level_idx_dev)");
+    const auto after_buffers_alloc = WallClock::now();
 
     CUDA_RETURN_ON_ERR(cudaMemcpy(sym_c_ptr_dev, &(A_sym.sym_c_ptr[0]), (n + 1) * sizeof(unsigned), cudaMemcpyHostToDevice),
         "cudaMemcpy(sym_c_ptr_dev)");
     CUDA_RETURN_ON_ERR(cudaMemcpy(sym_r_idx_dev, &(A_sym.sym_r_idx[0]), nnz * sizeof(unsigned), cudaMemcpyHostToDevice),
         "cudaMemcpy(sym_r_idx_dev)");
+    const auto before_values_h2d = WallClock::now();
     CUDA_RETURN_ON_ERR(cudaMemcpy(val_dev, &(A_sym.val[0]), nnz * sizeof(REAL), cudaMemcpyHostToDevice), "cudaMemcpy(val_dev)");
+    const auto after_values_h2d = WallClock::now();
     CUDA_RETURN_ON_ERR(cudaMemcpy(l_col_ptr_dev, &(A_sym.l_col_ptr[0]), n * sizeof(unsigned), cudaMemcpyHostToDevice),
         "cudaMemcpy(l_col_ptr_dev)");
     CUDA_RETURN_ON_ERR(cudaMemcpy(csr_r_ptr_dev, &(A_sym.csr_r_ptr[0]), (n + 1) * sizeof(unsigned), cudaMemcpyHostToDevice),
@@ -456,6 +475,7 @@ void LUonDevice(Symbolic_Matrix &A_sym, ostream &out, ostream &err, bool PERTURB
         "cudaMemcpy(csr_diag_ptr_dev)");
     CUDA_RETURN_ON_ERR(cudaMemcpy(level_idx_dev, &(A_sym.level_idx[0]), n * sizeof(int), cudaMemcpyHostToDevice),
         "cudaMemcpy(level_idx_dev)");
+    const auto after_h2d = WallClock::now();
 
     for (int j = 0; j < Nstreams; ++j) {
         CUDA_RETURN_ON_ERR(cudaStreamCreate(&streams[j]), "cudaStreamCreate");
@@ -486,6 +506,7 @@ void LUonDevice(Symbolic_Matrix &A_sym, ostream &out, ostream &err, bool PERTURB
     const size_t tmp_bytes = size_t(TMPMEMNUM) * size_t(n) * sizeof(REAL);
     CUDA_RETURN_ON_ERR(cudaMalloc((void**)&tmpMem, tmp_bytes), "cudaMalloc(tmpMem)");
     CUDA_RETURN_ON_ERR(cudaMemset(tmpMem, 0, tmp_bytes), "cudaMemset(tmpMem)");
+    const auto after_workspace = WallClock::now();    
 
     // calculate 1-norm of A and perturbation value for perturbation
     REAL pert = 0;
@@ -548,6 +569,7 @@ void LUonDevice(Symbolic_Matrix &A_sym, ostream &out, ostream &err, bool PERTURB
         }
     };
 
+    const auto before_levels_loop = WallClock::now();
     for (unsigned i = 0; i < num_lev; ++i)
     {
         int lev_size = A_sym.level_ptr[i + 1] - A_sym.level_ptr[i];
@@ -616,8 +638,11 @@ void LUonDevice(Symbolic_Matrix &A_sym, ostream &out, ostream &err, bool PERTURB
         CUDA_RETURN_ON_ERR(cudaDeviceSynchronize(), "cudaDeviceSynchronize");
     }
 
+    const auto after_levels_loop = WallClock::now();
+
     CUDA_RETURN_ON_ERR(cudaMemcpy(&(A_sym.val[0]), val_dev, nnz * sizeof(REAL), cudaMemcpyDeviceToHost),
         "cudaMemcpy(A_sym.val)");
+    const auto after_factors_d2h = WallClock::now();
     CUDA_RETURN_ON_ERR(cudaEventRecord(stop, 0), "cudaEventRecord(stop)");
     CUDA_RETURN_ON_ERR(cudaEventSynchronize(stop), "cudaEventSynchronize(stop)");
     CUDA_RETURN_ON_ERR(cudaEventElapsedTime(&time, start, stop), "cudaEventElapsedTime");
@@ -634,6 +659,78 @@ void LUonDevice(Symbolic_Matrix &A_sym, ostream &out, ostream &err, bool PERTURB
     if (err_find != 0)
         err << "LU data check: NaN/Inf found." << endl;
 #endif
+    const auto before_release = WallClock::now();
     cleanup();
+    const auto after_release = WallClock::now();
+
+    out << std::setprecision(12);
+
+    out << "GLU device_prepare: "
+        << device_elapsed_ms(device_start, after_device_prepare)
+        << " ms" << endl;
+
+    out << "GLU device_body_mixed: "
+        << device_elapsed_ms(after_device_prepare, before_release)
+        << " ms" << endl;
+
+    out << "GLU device_release: "
+        << device_elapsed_ms(before_release, after_release)
+        << " ms" << endl;
+
+    out << "GLU device_inner_total: "
+        << device_elapsed_ms(device_start, after_release)
+        << " ms" << endl;
+    
+    out << "GLU device_count_entry: "
+        << device_elapsed_ms(device_start, after_device_count)
+        << " ms" << endl;
+
+    out << "GLU device_properties: "
+        << device_elapsed_ms(after_device_count, after_device_properties)
+        << " ms" << endl;
+
+    out << "GLU device_select: "
+        << device_elapsed_ms(after_device_properties, after_device_select)
+        << " ms" << endl;
+
+    out << "GLU device_prepare_other: "
+        << device_elapsed_ms(after_device_select, after_device_prepare)
+        << " ms" << endl;
+    
+    const double structure_h2d_ms =
+        device_elapsed_ms(after_buffers_alloc, before_values_h2d)
+        + device_elapsed_ms(after_values_h2d, after_h2d);
+
+    out << "GLU device_events_alloc: "
+        << device_elapsed_ms(after_device_prepare, after_buffers_alloc)
+        << " ms" << endl;
+
+    out << "GLU device_h2d_structure: "
+        << structure_h2d_ms << " ms" << endl;
+
+    out << "GLU device_h2d_values: "
+        << device_elapsed_ms(before_values_h2d, after_values_h2d)
+        << " ms" << endl;
+
+    out << "GLU device_workspace: "
+        << device_elapsed_ms(after_h2d, after_workspace)
+        << " ms" << endl;
+
+    out << "GLU device_host_numeric_prepare: "
+        << device_elapsed_ms(after_workspace, before_levels_loop)
+        << " ms" << endl;
+
+    out << "GLU device_levels_wall: "
+        << device_elapsed_ms(before_levels_loop, after_levels_loop)
+        << " ms" << endl;
+
+    out << "GLU device_factors_d2h: "
+        << device_elapsed_ms(after_levels_loop, after_factors_d2h)
+        << " ms" << endl;
+
+    out << "GLU device_finalize: "
+        << device_elapsed_ms(after_factors_d2h, before_release)
+        << " ms" << endl;
+
 #undef CUDA_RETURN_ON_ERR
 }

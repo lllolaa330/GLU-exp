@@ -13,6 +13,12 @@
 #include <chrono>
 
 using namespace std;
+using Clock = std::chrono::steady_clock;
+
+static double elapsed_ms(Clock::time_point start, Clock::time_point stop)
+{
+    return std::chrono::duration<double, std::milli>(stop - start).count();
+}
 
 void help_message()
 {
@@ -25,8 +31,6 @@ void help_message()
 
 int main(int argc, char** argv)
 {
-    Timer t;
-    double utime;
     SNicsLU *nicslu = nullptr;
 
     const char *matrixName = nullptr;
@@ -87,28 +91,20 @@ int main(int argc, char** argv)
     cout << "Matrix Row: " << n << endl;
     cout << "Original nonzero: " << nicslu->nnz << endl;
 
-    t.start();
+    const auto after_prepare = Clock::now();
 
-    // Symbolic analysis: fill-in prediction, CSR transpose, and level scheduling.
     Symbolic_Matrix A_sym(n, cout, cerr);
     A_sym.fill_in(ai, ap);
-    t.elapsedUserTime(utime);
-    cout << "Symbolic time: " << utime << " ms" << endl;
+    const auto after_symbolic = Clock::now();
 
-    t.start();
     A_sym.csr();
-    t.elapsedUserTime(utime);
-    cout << "CSR time: " << utime << " ms" << endl;
+    const auto after_csr = Clock::now();
 
-    t.start();
     A_sym.predictLU(ai, ap, ax);
-    t.elapsedUserTime(utime);
-    cout << "PredictLU time: " << utime << " ms" << endl;
+    const auto after_values = Clock::now();
 
-    t.start();
     A_sym.leveling();
-    t.elapsedUserTime(utime);
-    cout << "Leveling time: " << utime << " ms" << endl;
+    const auto after_levels = Clock::now();
 
 #if GLU_DEBUG
     A_sym.ABFTCalculateCCA();
@@ -117,6 +113,7 @@ int main(int argc, char** argv)
 
     // Numeric factorization on GPU updates A_sym.val in place to LU factors.
     LUonDevice(A_sym, cout, cerr, PERTURB);
+    const auto after_device = Clock::now();
 
 #if GLU_DEBUG
     A_sym.ABFTCheckResult();
@@ -129,7 +126,15 @@ int main(int argc, char** argv)
     const auto total_stop = std::chrono::steady_clock::now();
     const double total_ms = 
          std::chrono::duration<double, std::milli>(total_stop - total_start).count();
+    cout << std::setprecision(12);
     cout << "Total solve wall time: " << total_ms << " ms" << endl;
+    cout << "GLU input_preprocess_mixed: " << elapsed_ms(total_start, after_prepare) << " ms" << endl;
+    cout << "GLU symbolic: " << elapsed_ms(after_prepare, after_symbolic) << " ms" << endl;
+    cout << "GLU csr_structure: " << elapsed_ms(after_symbolic, after_csr) << " ms" << endl;
+    cout << "GLU values_prepare: " << elapsed_ms(after_csr, after_values) << " ms" << endl;
+    cout << "GLU leveling: " << elapsed_ms(after_values, after_levels) << " ms" << endl;
+    cout << "GLU device_pipeline: " << elapsed_ms(after_levels, after_device) << " ms" << endl;
+    cout << "GLU rhs_solve: " << elapsed_ms(after_device, total_stop) << " ms" << endl;
          
     {
         ofstream x_f("x.dat");

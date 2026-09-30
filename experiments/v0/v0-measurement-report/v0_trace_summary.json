@@ -1,0 +1,182 @@
+{
+  "duration_unit": "ns, inferred from epoch magnitude and wall-clock cross-check",
+  "groups": [
+    {
+      "pid": 1,
+      "name": "hcInit",
+      "count": 4,
+      "sum_ms": 0.00736,
+      "union_ms": 0.00736
+    },
+    {
+      "pid": 1,
+      "name": "hcGetDeviceCount",
+      "count": 1,
+      "sum_ms": 0.00375,
+      "union_ms": 0.00375
+    },
+    {
+      "pid": 1,
+      "name": "hcGetDeviceProperties",
+      "count": 1,
+      "sum_ms": 0.007831,
+      "union_ms": 0.007831
+    },
+    {
+      "pid": 1,
+      "name": "hcSetDevice",
+      "count": 1,
+      "sum_ms": 0.00219,
+      "union_ms": 0.00219
+    },
+    {
+      "pid": 1,
+      "name": "hcEventCreate",
+      "count": 2,
+      "sum_ms": 0.00822,
+      "union_ms": 0.00822
+    },
+    {
+      "pid": 1,
+      "name": "hcEventRecord",
+      "count": 2,
+      "sum_ms": 1.178404,
+      "union_ms": 1.178404
+    },
+    {
+      "pid": 2,
+      "name": "memset",
+      "count": 9,
+      "sum_ms": 0.180992,
+      "union_ms": 0.180992
+    },
+    {
+      "pid": 1,
+      "name": "hcMalloc",
+      "count": 9,
+      "sum_ms": 0.576061,
+      "union_ms": 0.576061
+    },
+    {
+      "pid": 3,
+      "name": "memcpy HTOD",
+      "count": 8,
+      "sum_ms": 0.015872,
+      "union_ms": 0.015872
+    },
+    {
+      "pid": 1,
+      "name": "hcMemcpy",
+      "count": 9,
+      "sum_ms": 1.387737,
+      "union_ms": 1.387737
+    },
+    {
+      "pid": 1,
+      "name": "hcStreamCreate",
+      "count": 16,
+      "sum_ms": 1.606114,
+      "union_ms": 1.606114
+    },
+    {
+      "pid": 1,
+      "name": "hcMemGetInfo",
+      "count": 1,
+      "sum_ms": 0.898523,
+      "union_ms": 0.898523
+    },
+    {
+      "pid": 1,
+      "name": "hcMemset",
+      "count": 1,
+      "sum_ms": 0.011691,
+      "union_ms": 0.011691
+    },
+    {
+      "pid": 2,
+      "name": "RL",
+      "count": 13,
+      "sum_ms": 0.152064,
+      "union_ms": 0.152064
+    },
+    {
+      "pid": 1,
+      "name": "hcLaunchKernel",
+      "count": 225,
+      "sum_ms": 12.813488,
+      "union_ms": 12.813488
+    },
+    {
+      "pid": 1,
+      "name": "hcDeviceSynchronize",
+      "count": 54,
+      "sum_ms": 2.881194,
+      "union_ms": 2.881194
+    },
+    {
+      "pid": 2,
+      "name": "RL_onecol_factorizeCurrentCol",
+      "count": 71,
+      "sum_ms": 0.361984,
+      "union_ms": 0.361984
+    },
+    {
+      "pid": 2,
+      "name": "RL_onecol_updateSubmat",
+      "count": 70,
+      "sum_ms": 0.388096,
+      "union_ms": 0.388096
+    },
+    {
+      "pid": 2,
+      "name": "RL_onecol_cleartmpMem",
+      "count": 71,
+      "sum_ms": 0.252672,
+      "union_ms": 0.252672
+    },
+    {
+      "pid": 3,
+      "name": "memcpy DTOH",
+      "count": 1,
+      "sum_ms": 0.003072,
+      "union_ms": 0.003072
+    },
+    {
+      "pid": 1,
+      "name": "hcEventSynchronize",
+      "count": 1,
+      "sum_ms": 0.00576,
+      "union_ms": 0.00576
+    },
+    {
+      "pid": 1,
+      "name": "hcEventElapsedTime",
+      "count": 1,
+      "sum_ms": 0.00165,
+      "union_ms": 0.00165
+    },
+    {
+      "pid": 1,
+      "name": "hcStreamDestroy",
+      "count": 16,
+      "sum_ms": 0.9654,
+      "union_ms": 0.9654
+    },
+    {
+      "pid": 1,
+      "name": "hcFree",
+      "count": 9,
+      "sum_ms": 0.072795,
+      "union_ms": 0.072795
+    },
+    {
+      "pid": 1,
+      "name": "hcEventDestroy",
+      "count": 2,
+      "sum_ms": 0.0031,
+      "union_ms": 0.0031
+    }
+  ],
+  "kernel_union_ms": 1.154816,
+  "kernel_sum_ms": 1.154816
+}
