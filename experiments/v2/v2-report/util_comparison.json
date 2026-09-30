@@ -1,0 +1,149 @@
+{
+  "V0": {
+    "load_start": "2026-09-30T15:11:39.865669",
+    "load_end": "2026-09-30T15:11:54.315173",
+    "load_seconds": 14.449504,
+    "devices": {
+      "GPU#0": {
+        "samples": 100,
+        "sample_mean_percent": 0.05,
+        "peak_percent": 1.0,
+        "nonzero_samples": 5,
+        "nonzero_sample_percent": 5.0,
+        "all_sample_gap_median_ms": 145.02200000000002,
+        "all_sample_gap_min_ms": 105.654,
+        "all_sample_gap_max_ms": 164.612
+      },
+      "GPU#1": {
+        "samples": 99,
+        "sample_mean_percent": 0.0,
+        "peak_percent": 0.0,
+        "nonzero_samples": 0,
+        "nonzero_sample_percent": 0.0,
+        "all_sample_gap_median_ms": 145.003,
+        "all_sample_gap_min_ms": 105.756,
+        "all_sample_gap_max_ms": 164.918
+      },
+      "GPU#2": {
+        "samples": 99,
+        "sample_mean_percent": 0.0,
+        "peak_percent": 0.0,
+        "nonzero_samples": 0,
+        "nonzero_sample_percent": 0.0,
+        "all_sample_gap_median_ms": 144.99400000000003,
+        "all_sample_gap_min_ms": 105.99799999999999,
+        "all_sample_gap_max_ms": 168.313
+      },
+      "GPU#3": {
+        "samples": 100,
+        "sample_mean_percent": 0.0,
+        "peak_percent": 0.0,
+        "nonzero_samples": 0,
+        "nonzero_sample_percent": 0.0,
+        "all_sample_gap_median_ms": 145.018,
+        "all_sample_gap_min_ms": 105.674,
+        "all_sample_gap_max_ms": 164.666
+      }
+    },
+    "pass_count": 100,
+    "max_relative_l2_error": 2.7443473321103818e-15
+  },
+  "V1": {
+    "load_start": "2026-09-30T15:43:37.890095",
+    "load_end": "2026-09-30T15:43:52.805847",
+    "load_seconds": 14.915752,
+    "devices": {
+      "GPU#0": {
+        "samples": 141,
+        "sample_mean_percent": 0.0,
+        "peak_percent": 0.0,
+        "nonzero_samples": 0,
+        "nonzero_sample_percent": 0.0,
+        "all_sample_gap_median_ms": 105.724,
+        "all_sample_gap_min_ms": 105.378,
+        "all_sample_gap_max_ms": 107.568
+      },
+      "GPU#1": {
+        "samples": 141,
+        "sample_mean_percent": 0.0,
+        "peak_percent": 0.0,
+        "nonzero_samples": 0,
+        "nonzero_sample_percent": 0.0,
+        "all_sample_gap_median_ms": 105.73,
+        "all_sample_gap_min_ms": 105.359,
+        "all_sample_gap_max_ms": 108.082
+      },
+      "GPU#2": {
+        "samples": 141,
+        "sample_mean_percent": 0.0,
+        "peak_percent": 0.0,
+        "nonzero_samples": 0,
+        "nonzero_sample_percent": 0.0,
+        "all_sample_gap_median_ms": 105.717,
+        "all_sample_gap_min_ms": 105.402,
+        "all_sample_gap_max_ms": 108.082
+      },
+      "GPU#3": {
+        "samples": 141,
+        "sample_mean_percent": 0.0,
+        "peak_percent": 0.0,
+        "nonzero_samples": 0,
+        "nonzero_sample_percent": 0.0,
+        "all_sample_gap_median_ms": 105.74,
+        "all_sample_gap_min_ms": 105.33099999999999,
+        "all_sample_gap_max_ms": 108.109
+      }
+    },
+    "pass_count": 100,
+    "max_relative_l2_error": 2.7487070565081374e-15
+  },
+  "V2": {
+    "load_start": "2026-09-30T15:53:10.851024",
+    "load_end": "2026-09-30T15:53:26.195550",
+    "load_seconds": 15.344526,
+    "devices": {
+      "GPU#0": {
+        "samples": 100,
+        "sample_mean_percent": 0.11,
+        "peak_percent": 1.0,
+        "nonzero_samples": 11,
+        "nonzero_sample_percent": 11.0,
+        "all_sample_gap_median_ms": 152.3745,
+        "all_sample_gap_min_ms": 125.11900000000001,
+        "all_sample_gap_max_ms": 171.933
+      },
+      "GPU#1": {
+        "samples": 100,
+        "sample_mean_percent": 0.0,
+        "peak_percent": 0.0,
+        "nonzero_samples": 0,
+        "nonzero_sample_percent": 0.0,
+        "all_sample_gap_median_ms": 152.4205,
+        "all_sample_gap_min_ms": 105.92500000000001,
+        "all_sample_gap_max_ms": 171.84099999999998
+      },
+      "GPU#2": {
+        "samples": 99,
+        "sample_mean_percent": 0.0,
+        "peak_percent": 0.0,
+        "nonzero_samples": 0,
+        "nonzero_sample_percent": 0.0,
+        "all_sample_gap_median_ms": 152.43349999999998,
+        "all_sample_gap_min_ms": 113.045,
+        "all_sample_gap_max_ms": 182.38299999999998
+      },
+      "GPU#3": {
+        "samples": 99,
+        "sample_mean_percent": 0.0,
+        "peak_percent": 0.0,
+        "nonzero_samples": 0,
+        "nonzero_sample_percent": 0.0,
+        "all_sample_gap_median_ms": 152.413,
+        "all_sample_gap_min_ms": 106.114,
+        "all_sample_gap_max_ms": 182.582
+      }
+    },
+    "pass_count": 100,
+    "max_relative_l2_error": 2.7565232835364002e-15
+  }
+}

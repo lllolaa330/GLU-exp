@@ -406,6 +406,9 @@ void LUonDevice(Symbolic_Matrix &A_sym, ostream &out, ostream &err, bool PERTURB
     float time = 0.0f;
 
     constexpr int Nstreams = 16;
+    constexpr unsigned single_col_waves = 4;
+    const unsigned single_col_threads =
+        single_col_waves * deviceProp.waveSize;
     cudaStream_t streams[Nstreams];
     bool stream_created[Nstreams] = {false};
 
@@ -600,7 +603,7 @@ void LUonDevice(Symbolic_Matrix &A_sym, ostream &out, ostream &err, bool PERTURB
                             - A_sym.csr_diag_ptr[currentCol] - 1;
 
                         if (!PERTURB)
-                            RL_onecol_factorizeCurrentCol<<<1, 1024, 0, streams[j]>>>(sym_c_ptr_dev,
+                            RL_onecol_factorizeCurrentCol<<<1, single_col_threads, 0, streams[j]>>>(sym_c_ptr_dev,
                                                                                         sym_r_idx_dev,
                                                                                         val_dev,
                                                                                         l_col_ptr_dev,
@@ -609,7 +612,7 @@ void LUonDevice(Symbolic_Matrix &A_sym, ostream &out, ostream &err, bool PERTURB
                                                                                         j,
                                                                                         n);
                         else
-                            RL_onecol_factorizeCurrentCol_perturb<<<1, 1024, 0, streams[j]>>>(sym_c_ptr_dev,
+                            RL_onecol_factorizeCurrentCol_perturb<<<1, single_col_threads, 0, streams[j]>>>(sym_c_ptr_dev,
                                                                                                 sym_r_idx_dev,
                                                                                                 val_dev,
                                                                                                 l_col_ptr_dev,
@@ -619,7 +622,7 @@ void LUonDevice(Symbolic_Matrix &A_sym, ostream &out, ostream &err, bool PERTURB
                                                                                                 n,
                                                                                                 pert);
                         if (subMatSize > 0)
-                            RL_onecol_updateSubmat<<<subMatSize, 1024, 0, streams[j]>>>(sym_c_ptr_dev,
+                            RL_onecol_updateSubmat<<<subMatSize, single_col_threads, 0, streams[j]>>>(sym_c_ptr_dev,
                                                                                           sym_r_idx_dev,
                                                                                           val_dev,
                                                                                           csr_c_idx_dev,
@@ -628,7 +631,7 @@ void LUonDevice(Symbolic_Matrix &A_sym, ostream &out, ostream &err, bool PERTURB
                                                                                           tmpMem,
                                                                                           j,
                                                                                           n);
-                        RL_onecol_cleartmpMem<<<1, 1024, 0, streams[j]>>>(sym_c_ptr_dev,
+                        RL_onecol_cleartmpMem<<<1, single_col_threads, 0, streams[j]>>>(sym_c_ptr_dev,
                                                                            sym_r_idx_dev,
                                                                            l_col_ptr_dev,
                                                                            currentCol,
